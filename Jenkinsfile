@@ -22,7 +22,7 @@ pipeline {
                 script{
                     sh '''
                     echo 'Buid Docker Image'
-                    docker build -t jeevanchoppa/cicd-e2e:${BUILD_NUMBER} .
+                    docker build -t jeevanchoppa/demos:${BUILD_NUMBER} .
                     '''
                 }
             }
@@ -51,7 +51,7 @@ pipeline {
                         // image.push()
                         // echo "Pushing image with 'latest' tag"
                         // image.tag("jeevanchoppa/cicd-e2e:latest")
-                        docker.image("jeevanchoppa/cicd-e2e:${env.BUILD_NUMBER}").push()
+                        docker.image("jeevanchoppa/demos:${env.BUILD_NUMBER}").push()
                     }
                 }
             }
