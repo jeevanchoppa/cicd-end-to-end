@@ -28,19 +28,35 @@ pipeline {
             }
         }
 
-        stage('Push the artifacts'){
-           steps{
-                script{
-                    sh '''
-                    echo 'Push to Repo'
-                    echo \"${DOCKER_HUB_CREDENTIALS_PSW}\" | docker login -u \"${DOCKER_HUB_CREDENTIALS_USR}\" --password-stdin
-                    docker push jeevanchoppa/cicd-e2e:${BUILD_NUMBER}
-                    docker logout
-                    echo "Logged out"
-                    '''
+        // stage('Push the artifacts'){
+        //    steps{
+        //         script{
+        //             sh '''
+        //             echo 'Push to Repo'
+        //             echo \"${DOCKER_HUB_CREDENTIALS_PSW}\" | docker login -u \"${DOCKER_HUB_CREDENTIALS_USR}\" --password-stdin
+        //             docker push jeevanchoppa/cicd-e2e:${BUILD_NUMBER}
+        //             docker logout
+        //             echo "Logged out"
+        //             '''
+        //         }
+        //     }
+        // }
+
+        stage('Push the artifacts') {
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub_credentials') {
+                        // def image = docker.image("jeevanchoppa/cicd-e2e:${env.BUILD_NUMBER}")
+                        // echo "Pushing image ${image}"
+                        // image.push()
+                        // echo "Pushing image with 'latest' tag"
+                        // image.tag("jeevanchoppa/cicd-e2e:latest")
+                        docker.image("jeevanchoppa/cicd-e2e:${env.BUILD_NUMBER}").push()
+                    }
                 }
             }
         }
+
         
         stage('Checkout K8S manifest SCM'){
             steps {
