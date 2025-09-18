@@ -4,6 +4,7 @@ pipeline {
     
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
+        DOCKER_HUB_CREDENTIALS = credentials('a662f70b-c5e8-4a3a-9abe-e36285be61c1')
     }
     
     stages {
@@ -32,7 +33,10 @@ pipeline {
                 script{
                     sh '''
                     echo 'Push to Repo'
+                    echo \"${DOCKER_HUB_CREDENTIALS_PSW}\" | docker login -u \"${DOCKER_HUB_CREDENTIALS_USR}\" --password-stdin
                     docker push jeevanchoppa/cicd-e2e:${BUILD_NUMBER}
+                    docker logout
+                    echo "Logged out"
                     '''
                 }
             }
